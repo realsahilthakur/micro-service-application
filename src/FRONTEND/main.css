@@ -153,7 +153,6 @@ body {
 /* Animation */
 #title {
   border-right: solid 2.5px var(--title-border-color, rgba(0, 0, 0, 0.75));
-  white-space: pre;
   overflow: hidden;
   letter-spacing: 0.20rem;
   margin-top: 30px;

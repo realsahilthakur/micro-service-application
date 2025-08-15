@@ -148,10 +148,6 @@ kubectl get applications -n argocd
 - Frontend: http://localhost:3000
 - Backend: http://localhost:5000
 
-### Docker Swarm:
-
-- Frontend: http://localhost:8080
-- Backend: http://localhost:5000
 
 ### Kubernetes:
 
