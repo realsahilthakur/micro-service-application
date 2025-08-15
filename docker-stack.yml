@@ -1,14 +1,28 @@
 version: "3.9"
 services:
+  # Simple nginx with static files
   frontend:
-    image: realsahilthakur/frontend-app:latest
+    image: nginx:alpine
     ports:
       - "8080:80"
     networks:
       - app-net
+    depends_on:
+      - backend
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    configs:
+      - source: frontend_html
+        target: /usr/share/nginx/html/index.html
+      - source: frontend_css
+        target: /usr/share/nginx/html/main.css
+      - source: frontend_time_js
+        target: /usr/share/nginx/html/time.js
 
   backend:
-    image: realsahilthakur/backend-app:latest
+    image: realsahilthakur/backend-app:v2.0
     environment:
       - DB_HOST=db
       - DB_PORT=5432
@@ -19,6 +33,12 @@ services:
       - "5000:5000"
     networks:
       - app-net
+    depends_on:
+      - db
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
   db:
     image: postgres:15
@@ -30,9 +50,22 @@ services:
       - dbdata:/var/lib/postgresql/data
     networks:
       - app-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
 networks:
   app-net:
+    driver: overlay
 
 volumes:
   dbdata:
+
+configs:
+  frontend_html:
+    file: ./src/FRONTEND/swarm-index.html
+  frontend_css:
+    file: ./src/FRONTEND/main.css
+  frontend_time_js:
+    file: ./src/FRONTEND/time.js

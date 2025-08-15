@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#062e3f">
+    <meta name="Description" content="To-Do List WebApp.">
+    <!-- Google Font: Work Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    <link rel="stylesheet" href="main.css">
+    <title>Todo-List</title>
+</head>
+<body>
+    <!-- Date and time in top-left corner -->
+    <div id="datetime-container">
+        <p><span id="datetime"></span></p>
+    </div>
+
+    <!-- Theme selectors in top-right corner -->
+    <div id="theme-container">
+        <div class="flexrow-container">
+            <div class="standard-theme theme-selector"></div>
+            <div class="light-theme theme-selector"></div>
+            <div class="darker-theme theme-selector"></div>
+        </div>
+    </div>
+
+    <div id="header">
+        <h3 id="title">TODO LIST APP🚀
+            <div id="border"></div>
+        </h3>
+        <h6 id="subtitle">Docker Swarm deployment !
+            <div id="border"></div>
+        </h6>
+    </div>
+
+    <div id="form">
+        <form>
+            <input class="todo-input" type="text" placeholder="write out the task bruh...">
+            <button class="todo-btn" type="submit">Hit it!</button>
+        </form>
+    </div>
+
+    <div id="myUnOrdList">
+        <ul class="todo-list">
+            <!-- Todos will be loaded here -->
+        </ul>
+    </div>
+
+    <script src="time.js" type="text/javascript"></script>
+    <script>
+        // Docker Swarm specific JavaScript with direct backend calls
+        const toDoInput = document.querySelector('.todo-input');
+        const toDoBtn = document.querySelector('.todo-btn');
+        const toDoList = document.querySelector('.todo-list');
+        const standardTheme = document.querySelector('.standard-theme');
+        const lightTheme = document.querySelector('.light-theme');
+        const darkerTheme = document.querySelector('.darker-theme');
+
+        // Event Listeners
+        toDoBtn.addEventListener('click', addToDo);
+        toDoList.addEventListener('click', deleteCheck);
+        document.addEventListener("DOMContentLoaded", getTodos);
+        standardTheme.addEventListener('click', () => changeTheme('standard'));
+        lightTheme.addEventListener('click', () => changeTheme('light'));
+        darkerTheme.addEventListener('click', () => changeTheme('darker'));
+
+        // Apply saved theme or default to standard
+        let savedTheme = localStorage.getItem('savedTheme') || 'standard';
+        changeTheme(savedTheme);
+
+        // Backend URL for Docker Swarm
+        const BACKEND_URL = 'http://localhost:5000';
+
+        // Fetch todos from backend
+        async function getTodos() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/todos`, { method: 'GET' });
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                const todos = await response.json();
+                todos.forEach(todo => {
+                    addTodoToDOM(todo.text, todo._id, todo.completed);
+                });
+            } catch (error) {
+                console.error('Error fetching todos:', error);
+                // Add demo todos if backend is not available
+                addTodoToDOM('Welcome to Docker Swarm Todo App!', 'demo1', false);
+                addTodoToDOM('Backend connection will be established soon', 'demo2', false);
+            }
+        }
+
+        // Add todo to DOM
+        function addTodoToDOM(text, id, completed) {
+            const toDoDiv = document.createElement("div");
+            toDoDiv.classList.add('todo', `${savedTheme}-todo`);
+            if (completed) toDoDiv.classList.add('completed');
+
+            const newToDo = document.createElement('li');
+            newToDo.innerText = text;
+            newToDo.classList.add('todo-item');
+            toDoDiv.appendChild(newToDo);
+
+            const checked = document.createElement('button');
+            checked.innerHTML = '<i class="fas fa-check"></i>';
+            checked.classList.add('check-btn', `${savedTheme}-button`);
+            checked.dataset.id = id;
+            toDoDiv.appendChild(checked);
+
+            const deleted = document.createElement('button');
+            deleted.innerHTML = '<i class="fas fa-trash"></i>';
+            deleted.classList.add('delete-btn', `${savedTheme}-button`);
+            deleted.dataset.id = id;
+            toDoDiv.appendChild(deleted);
+
+            toDoList.appendChild(toDoDiv);
+        }
+
+        // Add new todo
+        async function addToDo(event) {
+            event.preventDefault();
+            
+            if (toDoInput.value === '') {
+                alert("You must write something!");
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/todos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: toDoInput.value })
+                });
+                
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                const todo = await response.json();
+                addTodoToDOM(todo.text, todo._id, todo.completed);
+                toDoInput.value = '';
+            } catch (error) {
+                console.error('Error adding todo:', error);
+                // Add locally if backend is not available
+                const demoId = 'demo' + Date.now();
+                addTodoToDOM(toDoInput.value, demoId, false);
+                toDoInput.value = '';
+            }
+        }
+
+        // Handle delete and check actions
+        async function deleteCheck(event) {
+            const item = event.target;
+            const id = item.dataset.id;
+
+            if (item.classList[0] === 'delete-btn') {
+                const todo = item.parentElement;
+                todo.classList.add("fall");
+                
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/todos/${id}`, { method: 'DELETE' });
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    todo.addEventListener('transitionend', () => todo.remove());
+                } catch (error) {
+                    console.error('Error deleting todo:', error);
+                    todo.addEventListener('transitionend', () => todo.remove());
+                }
+            }
+
+            if (item.classList[0] === 'check-btn') {
+                const todo = item.parentElement;
+                const completed = !todo.classList.contains('completed');
+                
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/todos/${id}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ completed })
+                    });
+                    
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    todo.classList.toggle('completed');
+                } catch (error) {
+                    console.error('Error updating todo:', error);
+                    todo.classList.toggle('completed');
+                }
+            }
+        }
+
+        // Change theme (same as before)
+        function changeTheme(color) {
+            localStorage.setItem('savedTheme', color);
+            savedTheme = color;
+            document.body.className = color;
+            
+            color === 'darker' ? 
+                document.getElementById('title').classList.add('darker-title') : 
+                document.getElementById('title').classList.remove('darker-title');
+
+            document.querySelector('input').className = `todo-input ${color}-input`;
+            
+            document.querySelectorAll('.todo').forEach(todo => {
+                todo.className = `todo ${color}-todo ${todo.classList.contains('completed') ? 'completed' : ''}`;
+            });
+            
+            document.querySelectorAll('button').forEach(button => {
+                if (button.classList.contains('check-btn')) {
+                    button.className = `check-btn ${color}-button`;
+                } else if (button.classList.contains('delete-btn')) {
+                    button.className = `delete-btn ${color}-button`;
+                } else if (button.classList.contains('todo-btn')) {
+                    button.className = `todo-btn ${color}-button`;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
