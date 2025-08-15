@@ -112,7 +112,6 @@ body {
   height: 30px;
   width: 30px;
   margin: 0 5px;
-  cursor: pointer;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
@@ -151,40 +150,42 @@ body {
 }
 
 /* Animation */
+/* Animation */
 #title {
   border-right: solid 2.5px var(--title-border-color, rgba(0, 0, 0, 0.75));
   overflow: hidden;
   letter-spacing: 0.20rem;
   margin-top: 30px;
   margin-bottom: 10px;
-  max-width: 700px;
+  display: inline-block; /* Change from block to inline-block to fit content */
+  white-space: nowrap; /* Keep nowrap but let inline-block handle width */
 }
 
 #title {
   animation: animated-text 2s steps(15,end) 0.5s 1 normal both,
-             animated-cursor 750ms steps(15,end) infinite;
+             animated-cursor 750ms steps(1,end) infinite;
 }
 
 #title.darker-title {
-  animation: animated-text 2s steps(15,end) 0.5s 1 normal both, 
-             darker-animated-cursor 750ms steps(15,end) infinite;
+  animation: animated-text 2s steps(15,end) 0.5s 1 normal both,
+             darker-animated-cursor 750ms steps(1,end) infinite;
 }
 
 /* Text animation */
 @keyframes animated-text {
-  from { width: 0%; }
-  to { width: 700px; }
+  from { width: 0; }
+  to { width: auto; } /* Let the width adjust to the content length */
 }
 
 /* Cursor animations */
 @keyframes animated-cursor {
-  from { border-right-color: rgba(0, 0, 0, 0.75); }
-  to { border-right-color: transparent; }
+  50% { border-right-color: transparent; }
+  100% { border-right-color: var(--title-border-color, rgba(0, 0, 0, 0.75)); }
 }
 
 @keyframes darker-animated-cursor {
-  from { border-right-color: #01394c; }
-  to { border-right-color: transparent; }
+  50% { border-right-color: transparent; }
+  100% { border-right-color: #01394c; }
 }
 
 #subtitle {
@@ -393,7 +394,7 @@ form button {
   
   #title {
     animation: animated-text 1.5s steps(15,end) 1 normal both,
-               animated-cursor 750ms steps(15,end) infinite;
+               animated-cursor 750ms steps(1,end) infinite;
     margin-bottom: 10px;
     margin-top: 30px;
     max-width: 600px;
@@ -423,7 +424,7 @@ form button {
   
   #title {
     animation: animated-text 1.5s steps(15,end) 0.5s 1 normal both,
-               animated-cursor 750ms steps(15,end) infinite;
+               animated-cursor 750ms steps(1,end) infinite;
     max-width: 255px;
   }
   
