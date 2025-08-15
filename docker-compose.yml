@@ -1,13 +1,13 @@
 services:
   frontend:
-    build: ./frontend
+    build: ./src/FRONTEND
     ports:
       - "8081:80"
 
   backend:
-    build: ./BACKEND
+    build: ./src/BACKEND
     ports:
-      - "5000:5000"
+      - "5001:5000"
     depends_on:
       - db
 
