@@ -1,14 +1,20 @@
 version: "3.9"
 services:
   frontend:
-    image: sahil/frontend-app:latest
+    image: realsahilthakur/frontend-app:latest
     ports:
       - "8080:80"
     networks:
       - app-net
 
   backend:
-    image: sahil/backend-app:latest
+    image: realsahilthakur/backend-app:latest
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=mydb
+      - DB_USER=user
+      - DB_PASSWORD=pass
     ports:
       - "5000:5000"
     networks:
