@@ -2,12 +2,20 @@ services:
   frontend:
     build: ./src/FRONTEND
     ports:
-      - "8081:80"
+      - "80:80"
+    depends_on:
+      - backend
 
   backend:
     build: ./src/BACKEND
     ports:
-      - "5001:5000"
+      - "5000:5000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=mydb
+      - DB_USER=user
+      - DB_PASSWORD=pass
     depends_on:
       - db
 
@@ -17,5 +25,8 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: mydb
-    ports:
-      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

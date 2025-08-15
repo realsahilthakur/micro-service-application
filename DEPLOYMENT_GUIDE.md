@@ -5,7 +5,6 @@
 This project demonstrates a microservices application with multiple deployment strategies:
 
 - Local Docker deployment
-- Docker Swarm orchestration
 - Kubernetes orchestration
 - GitOps with ArgoCD
 
@@ -59,36 +58,8 @@ docker-compose up --build
 - Network: Internal communication
 - Volumes: Database persistence
 
-## 3. Docker Swarm Orchestration
 
-### Initialize Swarm:
-
-```bash
-# Initialize Docker Swarm
-docker swarm init
-
-# Deploy stack
-docker stack deploy -c docker-stack.yml microservices-stack
-
-# Check services
-docker service ls
-
-# Check stack
-docker stack ls
-
-# Access points:
-# Frontend: http://localhost:8080
-# Backend: http://localhost:5000
-```
-
-### Docker Stack Configuration:
-
-- File: `docker-stack.yml`
-- Services: frontend, backend, db
-- Networks: app-net
-- Volumes: dbdata
-
-## 4. Kubernetes Orchestration
+## 3. Kubernetes Orchestration
 
 ### Helm Charts Structure:
 
@@ -132,7 +103,7 @@ helm install frontend-app helm-charts/frontend-chart -n frontend
 kubectl get pods --all-namespaces
 ```
 
-## 5. GitOps with ArgoCD
+## 4. GitOps with ArgoCD
 
 ### ArgoCD Installation:
 
@@ -170,7 +141,7 @@ kubectl get applications -n argocd
 4. Applications deploy to Kubernetes
 5. Services update automatically
 
-## 6. Access Points
+## 5. Access Points
 
 ### Local Docker:
 
@@ -187,7 +158,7 @@ kubectl get applications -n argocd
 - Frontend: http://localhost:[NodePort] (check with `kubectl get svc -n frontend`)
 - ArgoCD UI: https://localhost:[NodePort] (check with `kubectl get svc -n argocd`)
 
-## 7. Verification Commands
+## 6. Verification Commands
 
 ### Docker:
 
@@ -212,7 +183,7 @@ kubectl get applications -n argocd   # ArgoCD apps
 kubectl logs -n [namespace] [pod]    # Pod logs
 ```
 
-## 8. Troubleshooting
+## 7. Troubleshooting
 
 ### Common Issues:
 
