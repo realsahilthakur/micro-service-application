@@ -1,5 +1,5 @@
 backend:
-  image: realsahilthakur/backend-app:latest
+  image: realsahilthakur/backend-app:v2.0
   port: 5000
 
 database:
