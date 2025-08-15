@@ -1,5 +1,5 @@
 frontend:
-  image: realsahilthakur/frontend-app:v2.1
+  image: realsahilthakur/frontend-app:v2.2
   port: 80
   
 service:

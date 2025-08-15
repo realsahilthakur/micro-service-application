@@ -144,9 +144,9 @@ body {
   align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   font-size: 3rem;
-  min-height: 25vh;
+  min-height: 20vh;
   width: 100%;
 }
 
@@ -156,8 +156,8 @@ body {
   white-space: pre;
   overflow: hidden;
   letter-spacing: 0.20rem;
-  margin-top: 50px;
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 10px;
   max-width: 700px;
 }
 
@@ -188,11 +188,19 @@ body {
   to { border-right-color: transparent; }
 }
 
+#subtitle {
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+  opacity: 0.9;
+  text-align: center;
+}
+
 form {
   display: flex;
   font-size: 1.7rem;
   justify-content: center;
-  margin: 15px 0;
+  margin: 25px 0;
   padding: 0.8rem;
   width: 100%;
 }
