@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  frontend:
+    image: sahil/frontend-app:latest
+    ports:
+      - "8080:80"
+    networks:
+      - app-net
+
+  backend:
+    image: sahil/backend-app:latest
+    ports:
+      - "5000:5000"
+    networks:
+      - app-net
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: mydb
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+networks:
+  app-net:
+
+volumes:
+  dbdata:

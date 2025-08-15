@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Frontend</title>
+  <script>
+  async function callBackend() {
+    const res = await fetch('/api/');
+    const data = await res.json();
+    document.getElementById('response').innerText = data.message;
+  }
+  window.onload = callBackend;
+</script>
+
+</head>
+<body>
+  <h1>Hello from the Frontend!</h1>
+  <h1>Welcome to the Frontend Application</h1>
+  <p>This application is designed to interact with the backend service.</p>
+  <p>This is a simple frontend application that communicates with the backend.</p>
+  <p>Backend says: <span id="response">Loading...</span></p>
+</body>
+</html>
+
