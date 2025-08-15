@@ -14,9 +14,9 @@ spec:
     spec:
       containers:
         - name: backend
-          image: {{ .Values.backend.image }}
+          image: { { .Values.backend.image } }
           ports:
-            - containerPort: {{ .Values.backend.port }}
+            - containerPort: { { .Values.backend.port } }
           env:
             - name: DB_HOST
               value: "{{ .Values.database.host }}"
