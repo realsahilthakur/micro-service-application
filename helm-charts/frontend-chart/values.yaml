@@ -1,0 +1,7 @@
+frontend:
+  image: realsahilthakur/frontend-app:latest
+  port: 80
+  
+service:
+  type: NodePort
+  port: 80

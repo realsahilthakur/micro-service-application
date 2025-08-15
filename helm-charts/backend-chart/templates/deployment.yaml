@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  namespace: backend
 spec:
   replicas: 1
   selector:
@@ -19,7 +20,7 @@ spec:
             - containerPort: {{ .Values.backend.port }}
           env:
             - name: DB_HOST
-              value: "postgres-service"
+              value: "{{ .Values.database.host }}"
             - name: DB_PORT
               value: "{{ .Values.database.port }}"
             - name: DB_NAME

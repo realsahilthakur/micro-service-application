@@ -1,0 +1,10 @@
+database:
+  image: postgres:15
+  user: user
+  password: pass
+  name: mydb
+  port: 5432
+
+service:
+  type: ClusterIP
+  port: 5432
